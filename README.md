@@ -1,4 +1,4 @@
-- 👋 Hi, I’m @PiyushSahal, Microsoft certified Consultant and Trainer.
+- 👋 Hi, I’m @PiyushSahal, Microsoft Certified Consultant and Trainer.
 - 👀 I’m interested in Office 365 and SharePoint 
 - 🌱 I’m currently learning Azure
 - 💞️ I’m looking to collaborate on Azure and Office 365 related technologies
