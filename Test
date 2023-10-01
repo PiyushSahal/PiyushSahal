@@ -5,6 +5,9 @@ $exchangeSession = Connect-ExchangeOnline -Credential $credential
 # Read group emails from groupdata.csv
 $groupData = Import-Csv -Path "groupsdata.csv"
 
+# Initialize an array to store the output data for all groups
+$outputData = @()
+
 foreach ($group in $groupData) {
     $groupEmail = $group.Email
     Write-Host "Fetching data for $groupEmail "
@@ -22,8 +25,8 @@ foreach ($group in $groupData) {
         Email = $emails
     }
 
-    # Export the data for the current group to a CSV file
-    $groupOutput | Export-Csv -Path "groupowners_$groupEmail.csv" -NoTypeInformation
+    # Append the data for the current group to the CSV file
+    $groupOutput | Export-Csv -Path "groupowners.csv" -NoTypeInformation -Append
 }
 
 # Disconnect Exchange Online
