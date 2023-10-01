@@ -1,34 +1,30 @@
-#Connect to Exchange Online
-#$credential = Get-Credential
-#$exchangeSession = Connect-ExchangeOnline
+# Connect to Exchange Online
+$credential = Get-Credential
+$exchangeSession = Connect-ExchangeOnline -Credential $credential
 
 # Read group emails from groupdata.csv
 $groupData = Import-Csv -Path "groupsdata.csv"
 
-# Initialize an array to store the output data for all groups
-$outputData = @()
-
 foreach ($group in $groupData) {
     $groupEmail = $group.Email
     Write-Host "Fetching data for $groupEmail "
-    #Get Owners of an Office 365 Group
+    # Get Owners of an Office 365 Group
     $owners = Get-UnifiedGroup -Identity $groupEmail | Get-UnifiedGroupLinks -LinkType Owner | Select DisplayName, PrimarySmtpAddress
 
-    #Format the output with users and email addresses in separate comma-separated columns
+    # Format the output with users and email addresses in separate comma-separated columns
     $users = ($owners | ForEach-Object { $_.DisplayName }) -join ","
     $emails = ($owners | ForEach-Object { $_.PrimarySmtpAddress }) -join ","
 
-    # Create an object to hold the data for the current group and add it to the output array
+    # Create an object to hold the data for the current group
     $groupOutput = [PSCustomObject]@{
         GroupEmail = $groupEmail
         Users = $users
         Email = $emails
     }
-    $outputData += $groupOutput
+
+    # Export the data for the current group to a CSV file
+    $groupOutput | Export-Csv -Path "groupowners_$groupEmail.csv" -NoTypeInformation
 }
 
-# Export the data for all groups to groupowners.csv
-$outputData | Export-Csv -Path "groupowners.csv" -NoTypeInformation
-
-#Disconnect Exchange Online
+# Disconnect Exchange Online
 Disconnect-ExchangeOnline -Confirm:$False
